@@ -130,7 +130,7 @@ class MemoryGame {
                 </div>
             `;
 
-            this.gameBoard!.appendChild(cardElement);
+            this.gameBoard?.appendChild(cardElement);
         });
     }
 

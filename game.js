@@ -18,10 +18,10 @@ class MemoryGame {
         this.difficulties = {
             [Difficulty.Easy]: 6,
             [Difficulty.Medium]: 8,
-            [Difficulty.Hard]: 12
+            [Difficulty.Hard]: 10
         };
         this.currentDifficulty = Difficulty.Easy;
-        // Icons for cards
+        // Icons for cards - using simple emojis that are visible on all platforms
         this.icons = ['🚀', '🌟', '🎮', '🎨', '🎵', '🍕', '🏆', '🎯', '🎭', '🛹', '🌈', '🔮'];
         // Handle card click
         this.handleCardClick = (e) => {
@@ -53,6 +53,10 @@ class MemoryGame {
                 this.checkForMatch();
             }
         };
+        // Handle window resize
+        this.handleResize = () => {
+            this.adjustGridLayout();
+        };
         // Initialize DOM elements
         this.gameBoard = document.getElementById('game-board');
         this.movesElement = document.getElementById('moves');
@@ -66,6 +70,8 @@ class MemoryGame {
         // Initialize game
         this.initGame();
         this.attachEventListeners();
+        // Add resize handler to adjust when viewport changes
+        window.addEventListener('resize', this.handleResize);
     }
     // Initialize game
     initGame() {
@@ -98,16 +104,8 @@ class MemoryGame {
         if (!this.gameBoard)
             return;
         this.gameBoard.innerHTML = '';
-        // Adjust grid columns based on difficulty
-        if (this.currentDifficulty === Difficulty.Easy) {
-            this.gameBoard.style.gridTemplateColumns = 'repeat(3, 1fr)';
-        }
-        else if (this.currentDifficulty === Difficulty.Medium) {
-            this.gameBoard.style.gridTemplateColumns = 'repeat(4, 1fr)';
-        }
-        else {
-            this.gameBoard.style.gridTemplateColumns = 'repeat(4, 1fr)';
-        }
+        // Adjust grid columns based on difficulty and viewport
+        this.adjustGridLayout();
         this.cards.forEach(card => {
             const cardElement = document.createElement('div');
             cardElement.className = 'card';
@@ -124,8 +122,30 @@ class MemoryGame {
                     ${card.icon}
                 </div>
             `;
+            // We already checked that this.gameBoard is not null above
             this.gameBoard.appendChild(cardElement);
         });
+    }
+    // Adjust grid layout based on difficulty and viewport
+    adjustGridLayout() {
+        if (!this.gameBoard)
+            return;
+        const totalCards = this.difficulties[this.currentDifficulty] * 2;
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const isLandscape = viewportWidth > viewportHeight;
+        // Determine optimal grid layout
+        let columns;
+        if (this.currentDifficulty === Difficulty.Easy) {
+            columns = (viewportWidth < 600 || totalCards <= 12) ? 3 : 4;
+        }
+        else if (this.currentDifficulty === Difficulty.Medium) {
+            columns = (viewportWidth < 600) ? 4 : (isLandscape ? 4 : 4);
+        }
+        else { // Hard
+            columns = (viewportWidth < 600) ? 4 : (isLandscape ? 5 : 4);
+        }
+        this.gameBoard.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
     }
     // Flip a card
     flipCard(card, element) {
