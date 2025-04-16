@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Memory Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Memory Master</h1>
+            <div class="stats">
+                <div id="moves">Moves: 0</div>
+                <div id="timer">Time: 0s</div>
+            </div>
+        </header>
+        
+        <div class="game-board" id="game-board"></div>
+        
+        <div class="controls">
+            <button id="restart-btn">Restart Game</button>
+            <div class="difficulty">
+                <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
+                <button class="difficulty-btn" data-difficulty="medium">Medium</button>
+                <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Created by [Your Name] | TypeScript + HTML/CSS Demo
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="victory-modal">
+        <div class="modal">
+            <h2>Congratulations!</h2>
+            <p>You completed the game in <span id="final-moves">0</span> moves and <span id="final-time">0</span> seconds.</p>
+            <button id="play-again-btn">Play Again</button>
+        </div>
+    </div>
+
+    <!-- Include compiled TypeScript -->
+    <script src="game.js"></script>
+</body>
+</html>
